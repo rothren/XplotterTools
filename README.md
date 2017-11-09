@@ -11,19 +11,28 @@ What you got (for now):
 /!\Remember, all coordinates are in mm and can be floating! (ex : circle(10 , 20.45 , 7.86) Will draw a circle at (10,20.45) with a 7.86mm radius
 
 line(x1,y1,x2,y2) : draw a line between point (x1,y1) and (x2,y2)
+
 circle(x,y,r) : draw a circle at (x,y) with a radius of 'r' 
-arcDegtoDeg(x1,y1,r,angle1,angle2,direction) : draw an arc where the center is at (x1,y1), with a 'r' radius, between angle1 and angle2 (in degrees). direction needs to be positive or negative, to indicate... well, what's the direction between the two angles. positive is clockwise, megative is counterclockwise. Small example : 
+
+arcDegtoDeg(x1,y1,r,angle1,angle2,direction) : draw an arc where the center is at (x1,y1), with a 'r' radius, between angle1 and angle2 (in degrees). direction needs to be positive or negative, to indicate... well, what's the direction between the two angles. positive is clockwise, megative is counterclockwise. 
+Small example : 
      arcDegtoDeg(50,50,10,0,90,1)
      
      This will draw a quarter circle (angle 0 to angle 90 in a positive path), centered in 50,50, with a radius of 10
      Inverting the direction will draw 3/4th of a circle! (going from angle 0 to angle 90 counterclockwise takes 270degrees)
 
 You can also : 
+
 move(x,y) : Go to position (x,y) at normal speed. Beware! If laser in on, it will stay on!
+
 moveFast(x,y) : Go to position (x,y) as fast as possible. Other future operations will still go at the speed you specified.
+
 setPower(power) : Set the laser power (0-255) 0 is off, 255 is  as hot as possible.
+
 setSpeed(speed) : Set the speed at which you are drawing stuff in mm/min
+
 laserOn() : Activate the laser. If power is on 0, it still wont work.
+
 laserOff() : Deactivate the laser.
 
 
