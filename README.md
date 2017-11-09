@@ -35,7 +35,7 @@ laserOn() : Activate the laser. If power is on 0, it still wont work.
 
 laserOff() : Deactivate the laser.
 
-
+--------------------------------------------
 
 
 I don't know anything about programming :(
