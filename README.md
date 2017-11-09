@@ -2,11 +2,11 @@
 A small c program generating gcode files for the XPlotter
 
 
-How to use
+**How to use
 
 Well... there isn't a lot to say, it is a single c file with no dependency. Just open it in Eclipse/CodeBlocks/or the IDE you like the most, compile and run. After that, you'll find a "xplotter.g" file in your source folder. Put this file on a SD card, put the card in your Xplotter... et voilà!
 
-What you got (for now):
+**What you got (for now):
 
 /!\Remember, all coordinates are in mm and can be floating! (ex : circle(10 , 20.45 , 7.86) Will draw a circle at (10,20.45) with a 7.86mm radius
 
@@ -21,7 +21,7 @@ Small example :
      This will draw a quarter circle (angle 0 to angle 90 in a positive path), centered in 50,50, with a radius of 10
      Inverting the direction will draw 3/4th of a circle! (going from angle 0 to angle 90 counterclockwise takes 270degrees)
 
-You can also : 
+**You can also : 
 
 move(x,y) : Go to position (x,y) at normal speed. Beware! If laser in on, it will stay on!
 
@@ -38,7 +38,7 @@ laserOff() : Deactivate the laser.
 --------------------------------------------
 
 
-I don't know anything about programming :(
+**I don't know anything about programming :(
 
 That's not really important, I'm sure you'll be able to use this!
 
