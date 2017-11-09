@@ -63,27 +63,17 @@ FILE* f;
 
 int main()
 {
-    remove("xplotter.g");
-    f = fopen("xplotter.g","a+");
+    remove("xplotter.g");  //remove existing GCode file
+    f = fopen("xplotter.g","a+");  //..and create it!
 
-    //demarrage
-   startRoutine();
+   startRoutine();//used to initialize the Xplotter (go to origin, set to absolute, yada yada...
 
-//COEUR DU PROGRAMME
+//and here you add what you want!
 
-    BITMAPINFOHEADER bitmapInfoHeader;
-    unsigned char *bitmapData;
-    bitmapData = LoadBitmapFile("panda.bmp",&bitmapInfoHeader);
+    setSpeed(800);//set your engraving speed (0-15000)
+    setPower(130);//set your laser power (0-255)
 
-    setSpeed(800);
 
-    for(int j=0;j<bitmapInfoHeader.biHeight;j++){
-        for(int i=0;i<bitmapInfoHeader.biWidth;i++)
-        {
-            setPower(255-bitmapData[i+j*bitmapInfoHeader.biWidth]);
-            line(i*0.3,j*0.3,i*0.3+0.1,j*0.3);
-        }
-    }
 
     for(float x=0 ; x<300 ; x+=5){
         line(x,0,x,250);
@@ -93,17 +83,7 @@ int main()
     }
 
 
-/*
-    circle(20,20,20);
-    circle(20,20,15);
-    line(0,0,40,0);
-    line(40,0,40,40);
-    line(40,40,0,40);
-    line(0,40,0,0);
-    arcDegtoDeg(20,20,10,0,90,1);
-    arcDegtoDeg(20,20,6,0,90,-1);*/
-
-// LA AU DESSUS!!!
+//stop your drawing routine here !
     fclose(f);
     return 0;
 }
@@ -264,4 +244,17 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
     //close file and return bitmap iamge data
     fclose(filePtr);
     return bitmapImage;
+
+
+    /*
+     for(int j=0;j<bitmapInfoHeader.biHeight;j++){
+        for(int i=0;i<bitmapInfoHeader.biWidth;i++)
+        {
+            setPower(255-bitmapData[i+j*bitmapInfoHeader.biWidth]);
+            line(i*0.3,j*0.3,i*0.3+0.1,j*0.3);
+        }
+    }
+
+
+    */
 }
