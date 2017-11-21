@@ -49,6 +49,7 @@ void moveFast(float x,float y);
 
 
 int line(float x1, float y1, float x2, float y2);
+int lineRelative(float x1,float y1);
 int circle(float x1, float y1, float r);
 int arcDegtoDeg(float x1, float y1, float r, float d1, float d2,int direction);
 
@@ -70,18 +71,52 @@ int main()
 
 //and here you add what you want!
 
+setSpeed(600);
+setPower(255);
+
+circle(5,5,5);
+
+/*
+    BITMAPINFOHEADER bitmapInfoHeader;
+    unsigned char* bitmapData;
+    bitmapData = LoadBitmapFile("panda.bmp",&bitmapInfoHeader);
+
+
+     for(int j=0;j<bitmapInfoHeader.biHeight;j++){
+            if(j==(bitmapInfoHeader.biHeight-1)){
+                //do some stuff
+                int a=0;
+                a++;
+            }
+        for(int i=0;i<bitmapInfoHeader.biWidth;i++)
+        {
+            setPower(255-bitmapData[i*4+j*bitmapInfoHeader.biWidth*4+2*j]);
+            line(i*0.3,j*0.3,i*0.3+0.1,j*0.3);
+        }
+    }*/
+/*
     setSpeed(800);//set your engraving speed (0-15000)
     setPower(130);//set your laser power (0-255)
 
 
 
-    for(float x=0 ; x<300 ; x+=5){
-        line(x,0,x,250);
-    }
-    for(float y=0 ; y<250 ; y+=5){
-        line(0,y,300,y);
+    for(float power=1;power<=5;power++){
+
+            setPower(power*50);//power 50-250
+
+            for(float speed=1;speed<=5;speed++){
+
+                setSpeed(400+speed*300);//speed 700-1900
+
+                for(float x=0 ; x<5 ; x+=0.3){
+                    line(x+(power-1)*5,(speed-1)*5,x+(power-1)*5,5+(speed-1)*5);
+                    line((power-1)*5,x+(speed-1)*5,(power-1)*5+5,x+(speed-1)*5);
+                }
+
+            }
     }
 
+*/
 
 //stop your drawing routine here !
     fclose(f);
@@ -132,6 +167,13 @@ int line(float x1, float y1, float x2, float y2){
     moveFast(x1,y1);
     laserOn();
     move(x2,y2);
+    laserOff();
+    return 0;
+}
+
+int lineRelative(float x1, float y1){
+    laserOn();
+    move(x1,y1);
     laserOff();
     return 0;
 }
