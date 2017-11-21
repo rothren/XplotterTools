@@ -17,6 +17,7 @@ lineRelative(x,y) : draw a line from your current position going on a (x,y) vect
 circle(x,y,r) : draw a circle at (x,y) with a radius of 'r' 
 
 int fingerJoint (float x1, float y1, float x2, float y2,float firstTeethLength, float teethLength, float teethDepth);
+
 This one... raws a fingerjoint, usually used for box assembly. It goes from (x1,y1) to (x2,y2), straight at first for 'firstTeethLength' millimeters, then draws teeh that are 'teethlength' long and 'teethDepth' deep. Ex:
 fingerJoint(0,0,105,0,  10  ,  5  ,  3);
 draws a perfect fingerjoint from 0 to 105 on th x axis... just try it out!
