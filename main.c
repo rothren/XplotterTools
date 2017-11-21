@@ -40,6 +40,9 @@ typedef struct tagBITMAPINFOHEADER
 
 void laserOn();
 void laserOff();
+void setAbsolute();
+void setRelative();
+
 void startRoutine();
 void setPower(int power);
 void setSpeed(int speed);
@@ -50,6 +53,7 @@ void moveFast(float x,float y);
 
 int line(float x1, float y1, float x2, float y2);
 int lineRelative(float x1,float y1);
+int fingerJoint (float x1, float y1, float x2, float y2,float firstTeethLength, float teethLength, float teethDepth);
 int circle(float x1, float y1, float r);
 int arcDegtoDeg(float x1, float y1, float r, float d1, float d2,int direction);
 
@@ -74,7 +78,10 @@ int main()
 setSpeed(600);
 setPower(255);
 
-circle(5,5,5);
+fingerJoint(10,55,10,10,10,5,5);
+fingerJoint(55,55,10,55,10,5,5);
+fingerJoint(55,10,55,55,10,5,5);
+fingerJoint(10,10,55,10,10,5,5);
 
 /*
     BITMAPINFOHEADER bitmapInfoHeader;
@@ -128,6 +135,13 @@ void startRoutine(){
     fprintf(f,"G21\nG90\nG28\nG4 S1\nG92 X0 Y0\n");
 }
 
+void setAbsolute(){
+    fprintf(f,"G90\n");
+}
+void setRelative(){
+    fprintf(f,"G91\n");
+}
+
 void laserOn()
 {
     fprintf(f,"M3 S%i\n",laserPower);
@@ -173,9 +187,57 @@ int line(float x1, float y1, float x2, float y2){
 
 int lineRelative(float x1, float y1){
     laserOn();
+    setRelative();
     move(x1,y1);
+    setAbsolute();
     laserOff();
     return 0;
+}
+
+
+int fingerJoint (float x1, float y1, float x2, float y2,float firstTeethLength, float teethLength, float teethDepth){
+
+
+
+if (firstTeethLength<=0){//dx XOR dy should be negative, nothing should be 0
+    return -1;
+}
+if (teethLength<=0){//dx XOR dy should be negative, nothing should be 0
+    return -1;
+}
+if (teethDepth<=0){//dx XOR dy should be negative, nothing should be 0
+    return -1;
+}
+
+
+    float direction =atan2(y2-y1,x2-x1);
+
+    float totalLength = (sqrt(pow(x2-x1,2)+pow(y2-y1,2)));
+
+    float numberOfTeeths = (totalLength-firstTeethLength*2+teethLength)/(2*teethLength);
+
+
+if(2*teethLength>=totalLength){
+    return -1;
+}
+
+
+    line(x1,y1,x1+firstTeethLength*cos(direction),y1+firstTeethLength*sin(direction));  //first length
+    for (float f=0;f<floor(numberOfTeeths);f+=1.0){
+        lineRelative(teethDepth*cos(direction+M_PI/2),teethDepth*sin(direction+M_PI/2));
+        lineRelative(teethLength*cos(direction),teethLength*sin(direction));
+        lineRelative(teethDepth*cos(direction-M_PI/2),teethDepth*sin(direction-M_PI/2));
+        lineRelative(teethLength*cos(direction),teethLength*sin(direction));
+
+    }
+    laserOn();
+    move(x2,y2);
+    laserOff();
+
+
+
+
+return 0;
 }
 
 
