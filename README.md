@@ -12,7 +12,14 @@ Well... there isn't a lot to say, it is a single c file with no dependency. Just
 
 line(x1,y1,x2,y2) : draw a line between point (x1,y1) and (x2,y2)
 
+lineRelative(x,y) : draw a line from your current position going on a (x,y) vector.
+
 circle(x,y,r) : draw a circle at (x,y) with a radius of 'r' 
+
+int fingerJoint (float x1, float y1, float x2, float y2,float firstTeethLength, float teethLength, float teethDepth);
+This one... raws a fingerjoint, usually used for box assembly. It goes from (x1,y1) to (x2,y2), straight at first for 'firstTeethLength' millimeters, then draws teeh that are 'teethlength' long and 'teethDepth' deep. Ex:
+fingerJoint(0,0,105,0,  10  ,  5  ,  3);
+draws a perfect fingerjoint from 0 to 105 on th x axis... just try it out!
 
 arcDegtoDeg(x1,y1,r,angle1,angle2,direction) : draw an arc where the center is at (x1,y1), with a 'r' radius, between angle1 and angle2 (in degrees). direction needs to be positive or negative, to indicate... well, what's the direction between the two angles. positive is clockwise, megative is counterclockwise. 
 Small example : 
@@ -34,6 +41,10 @@ setSpeed(speed) : Set the speed at which you are drawing stuff in mm/min
 laserOn() : Activate the laser. If power is on 0, it still wont work.
 
 laserOff() : Deactivate the laser.
+
+setAbsolute() : 'Normal' mode for this program. should be used everywhere, except (see setRelative())
+
+setRelative() : set coordinates to relative. should only be used with the 'move()' or 'moveFast' functions, and directly set back to absolute mode.
 
 --------------------------------------------
 
