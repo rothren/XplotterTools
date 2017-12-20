@@ -55,10 +55,12 @@ int line(float x1, float y1, float x2, float y2);
 int lineRelative(float x1,float y1);
 int fingerJoint (float x1, float y1, float x2, float y2,float firstTeethLength, float teethLength, float teethDepth);
 int circle(float x1, float y1, float r);
+int rectangle(float x1, float y1, float x2, float y2);
 int arcDegtoDeg(float x1, float y1, float r, float d1, float d2,int direction);
 
 
-unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader);
+unsigned char* LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader);
+unsigned char* getBitmapPixel(unsigned char* data, BITMAPINFOHEADER* info,int x,int y);
 
 //MAIN PARAMS
 int laserPower=0;
@@ -75,36 +77,45 @@ int main()
 
 //and here you add what you want!
 
-setSpeed(600);
+setSpeed(1000);
 setPower(255);
 
-fingerJoint(10,55,10,10,10,5,5);
-fingerJoint(55,55,10,55,10,5,5);
-fingerJoint(55,10,55,55,10,5,5);
-fingerJoint(10,10,55,10,10,5,5);
+BITMAPINFOHEADER bitmapInfoHeader;
+unsigned char *bitmapData;
 
-/*
-    BITMAPINFOHEADER bitmapInfoHeader;
-    unsigned char* bitmapData;
-    bitmapData = LoadBitmapFile("panda.bmp",&bitmapInfoHeader);
+bitmapData = LoadBitmapFile("panda.bmp",&bitmapInfoHeader);
 
 
-     for(int j=0;j<bitmapInfoHeader.biHeight;j++){
-            if(j==(bitmapInfoHeader.biHeight-1)){
-                //do some stuff
-                int a=0;
-                a++;
-            }
-        for(int i=0;i<bitmapInfoHeader.biWidth;i++)
-        {
-            setPower(255-bitmapData[i*4+j*bitmapInfoHeader.biWidth*4+2*j]);
-            line(i*0.3,j*0.3,i*0.3+0.1,j*0.3);
-        }
+
+
+
+for(long y=0;y<bitmapInfoHeader.biHeight;y++){
+    for(long x=0;x<bitmapInfoHeader.biWidth;x++){
+
+
+        unsigned char* data = getBitmapPixel(bitmapData,&bitmapInfoHeader,x,y);
+
+        line(x,y,x+(float)data[0]/255,y+(float)data[0]/255);
+
+    }
+}
+
+
+
+  /*  for (int imageIdx = 0;imageIdx < bitmapInfoHeader.biSizeImage;imageIdx+=3) // fixed semicolon
+    {
+        //R bitmapImage[imageIdx];
+        //G bitmapImage[imageIdx+2];
+        //B bitmapImage[imageIdx+3];
+        //get coordinates back
+
+        int y = floor(imageIdx/3/bitmapInfoHeader.biWidth);
+        int x = imageIdx/3-y*bitmapInfoHeader.biWidth;
+        line(x*10,y*10,x*10+bitmapData[imageIdx]*12/255,y*10+bitmapData[imageIdx]*12/255);
     }*/
-/*
-    setSpeed(800);//set your engraving speed (0-15000)
-    setPower(130);//set your laser power (0-255)
+//
 
+/*
 
 
     for(float power=1;power<=5;power++){
@@ -122,8 +133,8 @@ fingerJoint(10,10,55,10,10,5,5);
 
             }
     }
-
 */
+
 
 //stop your drawing routine here !
     fclose(f);
@@ -179,9 +190,22 @@ void setSpeed(int speed){
 int line(float x1, float y1, float x2, float y2){
     laserOff();
     moveFast(x1,y1);
+    if(x1==x2 && y1==y2)return 0;  //no need to write more if there is nothing to print!
+
     laserOn();
     move(x2,y2);
     laserOff();
+    return 0;
+}
+
+int rectangle(float x1, float y1, float x2, float y2){
+    laserOff();
+    moveFast(x1,y1);
+    line(x1,y1,x1,y2);
+    line(x1,y2,x2,y2);
+    line(x2,y2,x2,y1);
+    line(x2,y1,x1,y1);
+
     return 0;
 }
 
@@ -197,45 +221,40 @@ int lineRelative(float x1, float y1){
 
 int fingerJoint (float x1, float y1, float x2, float y2,float firstTeethLength, float teethLength, float teethDepth){
 
-
-
-if (firstTeethLength<=0){//dx XOR dy should be negative, nothing should be 0
-    return -1;
-}
-if (teethLength<=0){//dx XOR dy should be negative, nothing should be 0
-    return -1;
-}
-if (teethDepth<=0){//dx XOR dy should be negative, nothing should be 0
-    return -1;
-}
-
-
-    float direction =atan2(y2-y1,x2-x1);
-
-    float totalLength = (sqrt(pow(x2-x1,2)+pow(y2-y1,2)));
-
-    float numberOfTeeths = (totalLength-firstTeethLength*2+teethLength)/(2*teethLength);
-
-
-if(2*teethLength>=totalLength){
-    return -1;
-}
-
-
-    line(x1,y1,x1+firstTeethLength*cos(direction),y1+firstTeethLength*sin(direction));  //first length
-    for (float f=0;f<floor(numberOfTeeths);f+=1.0){
-        lineRelative(teethDepth*cos(direction+M_PI/2),teethDepth*sin(direction+M_PI/2));
-        lineRelative(teethLength*cos(direction),teethLength*sin(direction));
-        lineRelative(teethDepth*cos(direction-M_PI/2),teethDepth*sin(direction-M_PI/2));
-        lineRelative(teethLength*cos(direction),teethLength*sin(direction));
-
+    if (firstTeethLength<=0){//dx XOR dy should be negative, nothing should be 0
+        return -1;
     }
-    laserOn();
-    move(x2,y2);
-    laserOff();
+    if (teethLength<=0){//dx XOR dy should be negative, nothing should be 0
+        return -1;
+    }
+    if (teethDepth<=0){//dx XOR dy should be negative, nothing should be 0
+        return -1;
+    }
 
 
+        float direction =atan2(y2-y1,x2-x1);
 
+        float totalLength = (sqrt(pow(x2-x1,2)+pow(y2-y1,2)));
+
+        float numberOfTeeths = (totalLength-firstTeethLength*2+teethLength)/(2*teethLength);
+
+
+    if(2*teethLength>=totalLength){
+        return -1;
+    }
+
+
+        line(x1,y1,x1+firstTeethLength*cos(direction),y1+firstTeethLength*sin(direction));  //first length
+        for (float f=0;f<floor(numberOfTeeths);f+=1.0){
+            lineRelative(teethDepth*cos(direction+M_PI/2),teethDepth*sin(direction+M_PI/2));
+            lineRelative(teethLength*cos(direction),teethLength*sin(direction));
+            lineRelative(teethDepth*cos(direction-M_PI/2),teethDepth*sin(direction-M_PI/2));
+            lineRelative(teethLength*cos(direction),teethLength*sin(direction));
+
+        }
+        laserOn();
+        move(x2,y2);
+        laserOff();
 
 return 0;
 }
@@ -272,7 +291,7 @@ void move(float x,float y){
     //x = MIN(MAX(0,x),3000);
     //y = MIN(MAX(0,x),2450);
 
-    fprintf(f,"G0 X%.2f Y%.2f F%i\n",x,y,laserSpeed);
+    fprintf(f,"G1 X%.2f Y%.2f F%i\n",x,y,laserSpeed);
 }
 
 void moveFast(float x,float y){
@@ -284,7 +303,10 @@ void moveFast(float x,float y){
     setSpeed(oldspeed);
 }
 
-
+unsigned char* getBitmapPixel(unsigned char* data,BITMAPINFOHEADER* info,int x,int y){
+    int rowSize = floor(((*info).biBitCount*(*info).biWidth+31)/32)*4;
+    return (data + (int)(y*rowSize+x*floor((*info).biBitCount/8)));
+}
 
 
 unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
